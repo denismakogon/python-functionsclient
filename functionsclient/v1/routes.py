@@ -14,6 +14,8 @@
 
 import asyncio
 
+import json
+
 
 class AppRouteResource(object):
     def __init__(self, **kwargs):
@@ -103,6 +105,7 @@ class AppRoutes(object):
         :rtype: str
         """
         route = await self.show(route, loop=loop)
-        return (await self.api_client.execute(
+        result = (await self.api_client.execute(
             "/r/{0}{1}".format(route.appname, route.path, loop=loop),
             parameters, loop=loop))
+        return result if route.type == "sync" else json.loads(result)
