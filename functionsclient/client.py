@@ -54,7 +54,10 @@ class FunctionsClient(object):
         except Exception:
             try:
                 response_object = await response.json()
-                error_reason = response_object['message']
+                error_reason = response_object.get(
+                    'error', {
+                        "message": await response.text()
+                    }).get("message", await response.text())
             except Exception:
                 error_reason = await response.text()
 
