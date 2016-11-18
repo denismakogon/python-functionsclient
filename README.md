@@ -14,7 +14,7 @@ In order to run tests, set the corresponding environment variables:
 
         PYTHONASYNCIODEBUG=1
         FUNCTIONS_API_PROTO=http
-        FUNCTIONS_API_HOST=<where-api-deployed>
+        FUNCTIONS_API_HOST=<api-host>
         FUNCTIONS_API_PORT=<api-port>
         FUNCTIONS_API_VERSION=v1
 
