@@ -29,7 +29,7 @@ setuptools.setup(
     author_email='denis@iron.io',
     packages=setuptools.find_packages(),
     install_requires=[
-        'aiohttp'
+        'aiohttp==1.1.5'
     ],
     license='License :: OSI Approved :: Apache Software License',
     classifiers=[
@@ -49,12 +49,12 @@ setuptools.setup(
         'Operating System :: Unix',
         'Operating System :: MacOS',
     ],
-    keywords=['functions', 'serverless', 'Python API'],
+    keywords=['functions', 'async', 'serverless', 'Python API'],
     platforms=['Linux', 'Mac OS-X', 'Unix'],
     tests_require=[
         'flake8==2.5.0',
-        'hacking==0.11',
-        'testtools',
+        'hacking==0.12',
+        'testtools==2.2.0',
     ],
     zip_safe=True,
 )
