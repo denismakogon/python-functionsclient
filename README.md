@@ -1,22 +1,12 @@
-Functions API aiohttp-based Python client
-=========================================
+# Functions API aiohttp-based Python client
 
-Apps Python API usage
----------------------
-
-See sample in [examples](examples/apps_api.py)
+## IronFunctions Python API Usage Examples
+* [Apps](examples/apps_api.py)
+* [Routes](examples/routes_api.py)
 
 
-Apps Python API usage
----------------------
-
-See sample in [examples](examples/routes_api.py)
-
-
-Testing
--------
-
-In order to run tests please set corresponding env variables::
+## Testing
+In order to run tests, set the corresponding environment variables:
 
         PYTHONASYNCIODEBUG=1
         FUNCTIONS_API_PROTO=http
@@ -24,10 +14,8 @@ In order to run tests please set corresponding env variables::
         FUNCTIONS_API_PORT=<api-port>
         FUNCTIONS_API_VERSION=v1
 
-Style checks:
-
+### Style checks
     tox -epep8
     
-Integration scenarios tests:
-
+### Integration tests
     tox -epy35
