@@ -1,5 +1,9 @@
 # Functions API aiohttp-based Python client
 
+## What is IronFunctions?
+[IronFunctions](https://github.com/iron-io/functions) is an open source serverless platform, or as we like to refer to it,
+Functions as a Service (FaaS) platform that you can run anywhere.
+
 ## IronFunctions Python API Usage Examples
 * [Apps](examples/apps_api.py)
 * [Routes](examples/routes_api.py)
