@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     api_client = client.FunctionsAPIV1("192.168.0.111", api_port=10501)
 
-    async def create_app_route_and_execution():
+    async def create_app_route_and_execute():
         apps = await api_client.apps.list(loop=eventloop)
         print(apps)
         app = await api_client.apps.create("testapp", loop=eventloop)
@@ -42,4 +42,4 @@ if __name__ == "__main__":
                                           loop=eventloop, **{"name": "Johnny"})
         print(result)
 
-    eventloop.run_until_complete(create_app_route_and_execution())
+    eventloop.run_until_complete(create_app_route_and_execute())
