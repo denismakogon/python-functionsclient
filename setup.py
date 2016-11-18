@@ -24,7 +24,7 @@ setuptools.setup(
     version='0.0.1',
     description='Functions v1 Python API',
     long_description=read('README.md'),
-    url='https://functions.iron.io/',
+    url='https://open.iron.io/',
     author='Denis Makogon',
     author_email='denis@iron.io',
     packages=setuptools.find_packages(),
@@ -49,7 +49,7 @@ setuptools.setup(
         'Operating System :: Unix',
         'Operating System :: MacOS',
     ],
-    keywords=['functions', 'lambdas', 'python API'],
+    keywords=['functions', 'serverless', 'Python API'],
     platforms=['Linux', 'Mac OS-X', 'Unix'],
     tests_require=[
         'flake8==2.5.0',
