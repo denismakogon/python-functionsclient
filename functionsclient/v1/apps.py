@@ -23,6 +23,7 @@ class AppResource(object):
         self.routes = app_routes
         for k, v in kwargs.items():
             setattr(self, k, v)
+        self.__kwargs__ = kwargs
 
 
 class FunctionsApps(object):
@@ -34,13 +35,14 @@ class FunctionsApps(object):
         self.api_client = api_client
 
     async def list(
-            self, loop: asyncio.AbstractEventLoop=asyncio.get_event_loop()):
+            self, loop: asyncio.AbstractEventLoop=None):
         """
         Lists available apps
+
         :param loop: event loop instance
         :type loop: asyncio.AbstractEventLoop
         :return: list of AppResource
-        :rtype: list of AppResource
+        :rtype: list
         """
         apps = (await self.api_client.get("/apps", loop=loop))[self.apps_key]
         return [AppResource(
@@ -48,9 +50,10 @@ class FunctionsApps(object):
             **attrs) for attrs in apps]
 
     async def create(self, name,
-                     loop: asyncio.AbstractEventLoop=asyncio.get_event_loop()):
+                     loop: asyncio.AbstractEventLoop=None):
         """
         Creates an app
+
         :param name: app name
         :type name: str
         :param loop: event loop instance
@@ -63,9 +66,10 @@ class FunctionsApps(object):
         return AppResource(routes.AppRoutes(name, self.api_client), **app)
 
     async def show(self, name,
-                   loop: asyncio.AbstractEventLoop=asyncio.get_event_loop()):
+                   loop: asyncio.AbstractEventLoop=None):
         """
         This gives more details about a app, such as statistics.
+
         :param name: app name
         :type name: str
         :param loop: event loop instance
@@ -77,21 +81,34 @@ class FunctionsApps(object):
             "/apps/{0}".format(name), loop=loop))[self.app_key]
         return AppResource(routes.AppRoutes(name, self.api_client), **app)
 
-    async def update(self, appname,
-                     loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+    async def delete(self, name,
+                     loop: asyncio.AbstractEventLoop=None):
+        """
+        Deletes app
+
+        :param name: App name
+        :param loop: event loop
+        :return: None
+        :rtype: None
+        """
+        await self.api_client.delete(
+            "/apps/{0}".format(name), loop=loop
+        )
+        return None
+
+    async def update(self, app,
+                     loop: asyncio.AbstractEventLoop=None,
                      **parameters):
         """
         This gives more details about a app, such as statistics.
-        :param name: app name
-        :type name: str
+
+        :param app: app name
+        :type app: str
         :param loop: event loop instance
         :type loop: asyncio.AbstractEventLoop
         :return: app
         :rtype: AppResource
         """
-        return AppResource(routes.AppRoutes(
-            parameters.get("name", appname),
-            self.api_client),
-            **(await self.api_client.put(
-                "/apps/{0}".format(appname),
-                {"app": parameters}, loop=loop))[self.app_key])
+        await self.api_client.put("/apps/{0}".format(app),
+                                  {"app": parameters}, loop=loop)
+        return await self.show(app, loop=loop)

@@ -22,13 +22,11 @@ class FunctionTasks(object):
     def __init__(self, api_client):
         self.api_client = api_client
 
-    async def list(self, num=1,
-                   loop: asyncio.AbstractEventLoop=asyncio.get_event_loop()):
+    async def list(self,
+                   loop: asyncio.AbstractEventLoop=None):
         """
         Lists given number tasks
-        :param num:
-        :param loop:
+        :param loop: event loop
         :return:
         """
-        return (await self.api_client.get(
-            "/tasks", params={"n": num}, loop=loop))[self.tasks_key]
+        return (await self.api_client.get(loop=loop))[self.tasks_key]

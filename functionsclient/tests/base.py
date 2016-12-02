@@ -20,6 +20,8 @@ import testtools
 
 from functionsclient.v1 import client
 
+from urllib import parse
+
 
 class TestFunctions(testtools.TestCase):
 
@@ -27,28 +29,23 @@ class TestFunctions(testtools.TestCase):
         self.testloop = asyncio.new_event_loop()
         asyncio.set_event_loop(None)
 
-        self.api_host, self.api_port, self.api_proto, self.api_version = (
-            os.getenv("FUNCTIONS_API_HOST"),
-            os.getenv("FUNCTIONS_API_PORT", 8080),
-            os.getenv("FUNCTIONS_API_PROTO", "http"),
-            os.getenv("FUNCTIONS_API_VERSION", "v1"),
+        api_url = (
+            os.getenv("FUNCTIONS_API_URL", "http://localhost:8080/v1")
         )
 
-        if not self.api_host:
-            raise self.skipTest("Unable to locate Function "
-                                "API host env variable.")
-
+        parts = parse.urlparse(api_url)
         self.v1 = client.FunctionsAPIV1(
-            self.api_host,
-            api_port=self.api_port,
-            api_protocol=self.api_proto)
+            parts.hostname,
+            api_port=parts.port,
+            api_protocol=parts.scheme,
+        )
 
         # API limits app name to 30 symbols
         self.app_name = ("testapp-{}".format(str(uuid.uuid4())))[:30]
         self.new_app_name = ("testapp-{}".format(str(uuid.uuid4())))[:30]
 
         self.route_parameters = {
-            "type": "sync",
+            "type": "async",
             "path": "/hello-sync",
             "image": "iron/hello"
         }

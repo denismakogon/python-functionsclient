@@ -22,7 +22,13 @@ class FunctionsAPIV1(client.FunctionsClient):
     def __init__(self, api_host: str,
                  api_port: int=8080,
                  api_protocol: str="http"):
+        """
+        Creates V1 IronFunctions client
 
+        :param api_host: IronFunctions host
+        :param api_port: IronFunctions port
+        :param api_protocol: IronFunctions API protocol
+        """
         super(FunctionsAPIV1, self).__init__(
             api_host,
             api_port=api_port,

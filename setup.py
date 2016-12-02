@@ -23,13 +23,13 @@ setuptools.setup(
     name='python-functionsclient',
     version='0.0.1',
     description='Functions v1 Python API',
-    long_description=read('README.md'),
+    long_description=read('README.rst'),
     url='https://open.iron.io/',
     author='Denis Makogon',
     author_email='denis@iron.io',
     packages=setuptools.find_packages(),
     install_requires=[
-        'aiohttp==1.1.5'
+        'aiohttp>=1.1.6'
     ],
     license='License :: OSI Approved :: Apache Software License',
     classifiers=[
@@ -55,6 +55,7 @@ setuptools.setup(
         'flake8==2.5.0',
         'hacking==0.12',
         'testtools==2.2.0',
+        'pytest-cov==2.4.0',
     ],
     zip_safe=True,
 )

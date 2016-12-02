@@ -21,6 +21,7 @@ class AppRouteResource(object):
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
+        self.__kwargs__ = kwargs
 
 
 class AppRoutes(object):
@@ -33,13 +34,14 @@ class AppRoutes(object):
         self.app_name = app_name
 
     async def list(self,
-                   loop: asyncio.AbstractEventLoop=asyncio.get_event_loop()):
+                   loop: asyncio.AbstractEventLoop=None):
         """
         Lists available routes for app
+
         :param loop: event loop instance
         :type loop: asyncio.AbstractEventLoop
         :return: list of AppRoutes
-        :rtype: list of AppRouteResource
+        :rtype: list
         """
         routes = (await self.api_client.get(
             "/apps/{0}/routes".format(self.app_name),
@@ -47,10 +49,11 @@ class AppRoutes(object):
         return [AppRouteResource(**attrs) for attrs in routes]
 
     async def create(self,
-                     loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                     loop: asyncio.AbstractEventLoop=None,
                      **parameters):
         """
         Creates app route
+
         :param parameters: app route parameters
         :param loop: event loop instance
         :type loop: asyncio.AbstractEventLoop
@@ -60,13 +63,14 @@ class AppRoutes(object):
         parameters.update({"app_name": self.app_name})
         route = (await (self.api_client.post(
             "/apps/{0}/routes".format(self.app_name),
-            {"route": parameters}, loop=loop)))[self.route_key]
+            {self.route_key: parameters}, loop=loop)))[self.route_key]
         return AppRouteResource(**route)
 
     async def delete(self, route,
-                     loop: asyncio.AbstractEventLoop=asyncio.get_event_loop()):
+                     loop: asyncio.AbstractEventLoop=None):
         """
         Deletes an app route
+
         :param route: route path
         :param loop: event loop instance
         :type loop: asyncio.AbstractEventLoop
@@ -78,9 +82,10 @@ class AppRoutes(object):
                 self.app_name, route), loop=loop)
 
     async def show(self, route_path,
-                   loop: asyncio.AbstractEventLoop=asyncio.get_event_loop()):
+                   loop: asyncio.AbstractEventLoop=None):
         """
         Describes route for app
+
         :param route_path: route path
         :param loop: event loop instance
         :type loop: asyncio.AbstractEventLoop
@@ -92,20 +97,40 @@ class AppRoutes(object):
                 self.app_name, route_path), loop=loop))[self.route_key]
         return AppRouteResource(**route)
 
+    async def update(self, route_path,
+                     loop: asyncio.AbstractEventLoop=None, **params):
+        """
+        Updates route for app
+
+        :param route_path: route path
+        :param loop: event loop instance
+        :type loop: asyncio.AbstractEventLoop
+        :param params: new data for route
+        :type params: dict
+        :return: app route
+        :rtype: AppRouteResource
+        """
+        await self.api_client.put(
+            "/apps/{0}/routes{1}".format(self.app_name, route_path),
+            {self.route_key: params}, loop=loop,
+        )
+        return await self.show(route_path, loop=loop)
+
     async def execute(self, route,
-                      loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                      loop: asyncio.AbstractEventLoop=None,
                       **parameters):
         """
         Runs execution against app route
+
         :param route: route path
         :param parameters: route execution parameters
         :param loop: event loop instance
         :type loop: asyncio.AbstractEventLoop
         :return: execution result
-        :rtype: str
+        :rtype: object
         """
         route = await self.show(route, loop=loop)
         result = (await self.api_client.execute(
-            "/r/{0}{1}".format(route.appname, route.path, loop=loop),
+            "/r/{0}{1}".format(self.app_name, route.path, loop=loop),
             parameters, loop=loop))
         return result if route.type == "sync" else json.loads(result)

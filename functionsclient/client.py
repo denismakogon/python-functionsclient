@@ -14,7 +14,6 @@
 
 import aiohttp
 import asyncio
-
 import json
 
 
@@ -38,6 +37,7 @@ class FunctionsClient(object):
                  api_protocol: str="http"):
         """
         Initializes connection with Functions service
+
         :param api_host: Functions API host
         :param api_port: Functions API port
         :param api_version: Functions API version
@@ -49,6 +49,12 @@ class FunctionsClient(object):
             api_protocol, api_host, api_port)
 
     async def raise_from_response(self, response):
+        """
+        Raises exception from response code including additional processing
+
+        :param response: AIOHTTP response object
+        :return:
+        """
         try:
             response.raise_for_status()
         except Exception:
@@ -64,11 +70,12 @@ class FunctionsClient(object):
             raise FunctionsAPIException(error_reason, response.status)
 
     async def get(self, url: str, body: dict=None,
-                  loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                  loop: asyncio.AbstractEventLoop=None,
                   headers: dict=None,
                   timeout: int=300, params: dict=None) -> dict:
         """
         Runs HTTP GET
+
         :param url: accessible API URL
         :type url: str
         :param body:
@@ -92,10 +99,11 @@ class FunctionsClient(object):
             return await response.json()
 
     async def post(self, url: str, body: dict,
-                   loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                   loop: asyncio.AbstractEventLoop=None,
                    headers: dict=None, timeout=300) -> dict:
         """
         Runs HTTP POST
+
         :param url: accessible API URL
         :type url: str
         :param body:
@@ -118,10 +126,11 @@ class FunctionsClient(object):
             return await response.json()
 
     async def execute(self, url: str, body: dict,
-                      loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                      loop: asyncio.AbstractEventLoop=None,
                       headers: dict=None, timeout=300) -> dict:
         """
-        Runs POST webhook
+        Runs HTTP POST
+
         :param url: accessible API URL
         :type url: str
         :param body:
@@ -144,16 +153,22 @@ class FunctionsClient(object):
             return await response.text()
 
     async def put(self, url: str, body: dict,
-                  loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                  loop: asyncio.AbstractEventLoop=None,
                   headers: dict=None, timeout: int=300) -> dict:
         """
         Runs HTTP PUT
-        :param url:
+
+        :param url: accessible API URL
+        :type url: str
         :param body:
-        :param loop:
-        :param headers:
-        :param timeout:
-        :return:
+        :type body: dict
+        :param loop: Event loop instance
+        :type loop: asyncio.AbstractEventLoop
+        :param headers: HTTP headers
+        :type headers: dict
+        :param timeout: HTTP timeout
+        :type timeout: int
+        :return: response object
         """
         with aiohttp.ClientSession(loop=loop) as session:
             response = await session.put(
@@ -165,10 +180,11 @@ class FunctionsClient(object):
             return await response.json()
 
     async def delete(self, url: str, body: dict=None,
-                     loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                     loop: asyncio.AbstractEventLoop=None,
                      headers: dict=None, timeout: int=300) -> type(None):
         """
         Runs HTTP DELETE
+
         :param url: accessible API URL
         :type url: str
         :param body:
@@ -192,10 +208,11 @@ class FunctionsClient(object):
             response.close()
 
     async def patch(self, url: str, body: dict,
-                    loop: asyncio.AbstractEventLoop=asyncio.get_event_loop(),
+                    loop: asyncio.AbstractEventLoop=None,
                     headers: dict=None, timeout: int=300) -> dict:
         """
         Runs HTTP PATCH
+
         :param url: accessible API URL
         :type url: str
         :param body:

@@ -18,63 +18,117 @@ from functionsclient.tests import base
 class TestAPI(base.TestFunctions):
 
     def test_apps(self):
-        apps = self.testloop.run_until_complete(
-            self.v1.apps.list(loop=self.testloop))
-        self.assertEqual(0, len(apps))
 
-        app = self.testloop.run_until_complete(
-            self.v1.apps.create(self.app_name, loop=self.testloop))
-        self.assertEqual(self.app_name, app.name)
+        async def scenarios_one():
+            apps = await self.v1.apps.list(loop=self.testloop)
+            self.assertEqual(0, len(apps))
 
-        app_name = self.testloop.run_until_complete(
-            self.v1.apps.list(loop=self.testloop))[0].name
-        app = self.testloop.run_until_complete(
-            self.v1.apps.show(app_name, loop=self.testloop))
-        self.assertEqual(app_name, app.name)
+            created_app = await self.v1.apps.create(
+                self.app_name, loop=self.testloop)
+            self.assertEqual(self.app_name, created_app.name)
 
-        app_name = self.testloop.run_until_complete(
-            self.v1.apps.list(loop=self.testloop))[0].name
-        new_app = self.testloop.run_until_complete(
-            self.v1.apps.update(app_name,
-                                loop=self.testloop,
-                                **{"name": self.new_app_name}))
-        self.assertNotEqual(app_name, new_app)
-        self.assertEqual(new_app.name, self.new_app_name)
+            apps = await self.v1.apps.list(loop=self.testloop)
+            self.assertEqual(1, len(apps))
+
+            show_app = await self.v1.apps.show(
+                created_app.name, loop=self.testloop)
+            self.assertEqual(created_app.name, show_app.name)
+
+            updated_app = await self.v1.apps.update(
+                created_app.name, loop=self.testloop,
+                **{"name": self.new_app_name})
+            self.assertEqual(show_app.name, updated_app.name)
+
+            await self.v1.apps.delete(
+                created_app.name, loop=self.testloop)
+            apps = await self.v1.apps.list(loop=self.testloop)
+            self.assertEqual(0, len(apps))
+
+        self.testloop.run_until_complete(scenarios_one())
 
     def test_routes(self):
-        app = self.testloop.run_until_complete(
-            self.v1.apps.create(self.app_name, loop=self.testloop))
-        self.assertEqual(self.app_name, app.name)
+        async def scenarios_two():
+            created_app = await self.v1.apps.create(
+                self.app_name, loop=self.testloop)
+            app_routes = await created_app.routes.list(
+                loop=self.testloop)
+            self.assertEqual(0, len(app_routes))
 
-        routes = self.testloop.run_until_complete(
-            app.routes.list(loop=self.testloop))
-        self.assertEqual(0, len(routes))
+            create_route = await created_app.routes.create(
+                **self.route_parameters, loop=self.testloop)
 
-        route = self.testloop.run_until_complete(
-            app.routes.create(
-                **self.route_parameters, loop=self.testloop))
-        self.assertEqual(app.name, route.appname)
+            self.assertEqual(self.route_parameters["type"],
+                             create_route.type)
 
-        routes = self.testloop.run_until_complete(
-            app.routes.list(loop=self.testloop))
-        self.assertEqual(1, len(routes))
+            app_routes = await created_app.routes.list(loop=self.testloop)
+            self.assertEqual(1, len(app_routes))
 
-        route = self.testloop.run_until_complete(
-            app.routes.list(loop=self.testloop))[0]
-        copy_of_route = self.testloop.run_until_complete(
-            app.routes.show(route.path, loop=self.testloop))
-        self.assertEqual(route.path, copy_of_route.path)
-        self.assertEqual(route.type, copy_of_route.type)
+            copy_of_route = await created_app.routes.show(
+                create_route.path, loop=self.testloop)
+            self.assertEqual(create_route.path, copy_of_route.path)
+            self.assertEqual(create_route.type, copy_of_route.type)
 
-        route = self.testloop.run_until_complete(
-            app.routes.list(loop=self.testloop))[0]
+            updated_route = await created_app.routes.update(
+                create_route.path, loop=self.testloop, **{
+                    "type": "sync"})
+            self.assertNotIn(create_route.type, updated_route.type)
 
-        result = self.testloop.run_until_complete(
-            app.routes.execute(route.path, loop=self.testloop,
-                               **self.execution_parameters))
-        self.assertIsNotNone(result)
+            result = await created_app.routes.execute(
+                updated_route.path, loop=self.testloop,
+                **self.execution_parameters)
+            self.assertIsNotNone(result)
 
-        route = self.testloop.run_until_complete(
-            app.routes.list(loop=self.testloop))[0]
-        self.testloop.run_until_complete(
-            app.routes.delete(route.path, loop=self.testloop))
+            await created_app.routes.delete(
+                create_route.path, loop=self.testloop)
+            app_routes = await created_app.routes.list(
+                loop=self.testloop)
+            self.assertEqual(0, len(app_routes))
+
+            await self.v1.apps.delete(
+                created_app.name, loop=self.testloop)
+
+        self.testloop.run_until_complete(scenarios_two())
+
+    def test_get_unknown_app(self):
+        self.assertRaises(Exception,
+                          self.testloop.run_until_complete,
+                          self.v1.apps.show(
+                              "uknown", loop=self.testloop))
+
+    def test_get_unknown_route(self):
+        async def scenarios():
+            created_app = await self.v1.apps.create(
+                self.app_name, loop=self.testloop)
+
+            await created_app.routes.show(
+                "/unknown", loop=self.testloop)
+
+        self.assertRaises(Exception, self.testloop.run_until_complete,
+                          scenarios())
+        self.testloop.run_until_complete(self.v1.apps.delete(
+            self.app_name, loop=self.testloop))
+
+    def test_delete_app_with_routes(self):
+        async def scenarios():
+            created_app = await self.v1.apps.create(
+                self.app_name, loop=self.testloop)
+
+            await created_app.routes.create(
+                **self.route_parameters, loop=self.testloop)
+
+            await self.v1.apps.delete(created_app.name, loop=self.testloop)
+
+        self.assertRaises(Exception, self.testloop.run_until_complete,
+                          scenarios())
+
+        _app = self.testloop.run_until_complete(self.v1.apps.show(
+            self.app_name, loop=self.testloop))
+
+        for route in self.testloop.run_until_complete(
+                _app.routes.list(loop=self.testloop)):
+
+            self.testloop.run_until_complete(_app.routes.delete(
+                route.path, loop=self.testloop))
+
+        self.testloop.run_until_complete(self.v1.apps.delete(
+            self.app_name, loop=self.testloop))

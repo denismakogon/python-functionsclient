@@ -30,16 +30,22 @@ if __name__ == "__main__":
         print(app.__dict__)
 
         route = await app.routes.create(**{
-            "type": "sync",
+            "type": "async",
             "path": "/hello-sync",
-            "image": "iron/hello"
+            "image": "iron/hello",
+            "timeout": 100,
         }, loop=eventloop)
         print(route.__dict__)
-        route = await app.routes.show("/hello-sync", loop=eventloop)
+        route = await app.routes.show(route.path, loop=eventloop)
         print(route)
 
-        result = await app.routes.execute("/hello-sync",
+        updated_route = await app.routes.update(route.path, loop=eventloop, **{
+            "type": "sync"
+        })
+        result = await app.routes.execute(updated_route.path,
                                           loop=eventloop, **{"name": "Johnny"})
         print(result)
+
+        await app.routes.delete(updated_route.path, loop=eventloop)
 
     eventloop.run_until_complete(create_app_route_and_execute())
