@@ -21,7 +21,7 @@ def read(fname):
 
 setuptools.setup(
     name='python-functionsclient',
-    version='0.0.1',
+    version='0.0.2',
     description='Functions v1 Python API',
     long_description=read('README.rst'),
     url='https://open.iron.io/',
