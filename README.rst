@@ -1,6 +1,13 @@
 .. image:: https://travis-ci.org/denismakogon/python-functionsclient.svg?branch=master
     :target: https://travis-ci.org/denismakogon/python-functionsclient
 
+.. image:: https://codecov.io/gh/denismakogon/python-functionsclient/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/denismakogon/python-functionsclient
+
+.. image:: https://readthedocs.org/projects/python-functionsclient/badge/?version=latest
+    :target: http://aioservice.readthedocs.io/en/latest/?badge=latest
+
+
 #########################################
 Functions API aiohttp-based Python client
 #########################################
