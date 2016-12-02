@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/denismakogon/python-functionsclient.svg?branch=master
+    :target: https://travis-ci.org/denismakogon/python-functionsclient
+
 #########################################
 Functions API aiohttp-based Python client
 #########################################
