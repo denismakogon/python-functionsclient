@@ -24,7 +24,7 @@ setuptools.setup(
     version='0.0.3',
     description='Functions v1 Python API',
     long_description=read('README.rst'),
-    url='https://open.iron.io/',
+    url='http://open.iron.io/',
     author='Denis Makogon',
     author_email='denis@iron.io',
     packages=setuptools.find_packages(),
