@@ -21,8 +21,8 @@ Functions as a Service (FaaS) platform that you can run anywhere.
 IronFunctions Python API Usage Examples
 #######################################
 
-* Apps_
-* Routes_
+* Apps_ - An application is essentially a grouping of functions, that put together, form an API.
+* Routes_ - A route is a way to define a path in your application that maps to a function.
 
 Testing
 #######
