@@ -21,7 +21,7 @@ def read(fname):
 
 setuptools.setup(
     name='python-functionsclient',
-    version='0.0.2',
+    version='0.0.3',
     description='Functions v1 Python API',
     long_description=read('README.rst'),
     url='https://open.iron.io/',
@@ -37,7 +37,6 @@ setuptools.setup(
         'Intended Audience :: Information Technology',
         'Intended Audience :: System Administrators',
         'Intended Audience :: Developers',
-        'Environment :: No Input/Output (Daemon)',
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: '
         'Libraries :: Python Modules',
@@ -47,7 +46,7 @@ setuptools.setup(
         'Operating System :: Unix',
         'Operating System :: MacOS',
     ],
-    keywords=['functions', 'async', 'serverless', 'Python API'],
+    keywords=['functions', 'async', 'Python API'],
     platforms=['Linux', 'Mac OS-X', 'Unix'],
     tests_require=[
         'flake8==2.5.0',
