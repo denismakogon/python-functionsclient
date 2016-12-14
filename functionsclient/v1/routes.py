@@ -118,7 +118,7 @@ class AppRoutes(object):
                       loop: asyncio.AbstractEventLoop=None,
                       **parameters):
         """
-        Runs execution against app route
+        Executes app in route path
 
         :param route: route path
         :param parameters: route execution parameters
