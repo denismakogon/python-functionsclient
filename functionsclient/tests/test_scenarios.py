@@ -36,7 +36,7 @@ class TestAPI(base.TestFunctions):
 
             updated_app = await self.v1.apps.update(
                 created_app.name, loop=self.testloop,
-                **{"name": self.new_app_name})
+                **{"config": {"test": "test"}})
             self.assertEqual(show_app.name, updated_app.name)
 
             await self.v1.apps.delete(
@@ -93,7 +93,7 @@ class TestAPI(base.TestFunctions):
         self.assertRaises(Exception,
                           self.testloop.run_until_complete,
                           self.v1.apps.show(
-                              "uknown", loop=self.testloop))
+                              "unknown", loop=self.testloop))
 
     def test_get_unknown_route(self):
         async def scenarios():
