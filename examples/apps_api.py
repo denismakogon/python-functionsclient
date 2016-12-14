@@ -31,9 +31,11 @@ if __name__ == "__main__":
         apps = await api_client.apps.list(loop=eventloop)
         print(apps)
         updated_app = await api_client.apps.show(app.name, loop=eventloop)
-        new_app = await api_client.apps.update(updated_app.name, loop=eventloop, **{
-            "config": {"test": "hello"}
-        })
+        new_app = await api_client.apps.update(
+            updated_app.name, loop=eventloop, **{
+                "config": {"test": "hello"}
+            }
+        )
         print(new_app)
         await api_client.apps.delete(new_app.name, loop=eventloop)
 

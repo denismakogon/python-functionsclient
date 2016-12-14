@@ -14,8 +14,6 @@
 
 import asyncio
 
-import json
-
 
 class AppRouteResource(object):
     def __init__(self, **kwargs):
