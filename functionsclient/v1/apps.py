@@ -109,6 +109,6 @@ class FunctionsApps(object):
         :return: app
         :rtype: AppResource
         """
-        await self.api_client.put("/apps/{0}".format(app),
-                                  {"app": parameters}, loop=loop)
+        await self.api_client.patch("/apps/{0}".format(app),
+                                    {"app": parameters}, loop=loop)
         return await self.show(app, loop=loop)

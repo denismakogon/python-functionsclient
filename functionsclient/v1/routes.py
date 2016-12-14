@@ -110,7 +110,7 @@ class AppRoutes(object):
         :return: app route
         :rtype: AppRouteResource
         """
-        await self.api_client.put(
+        await self.api_client.patch(
             "/apps/{0}/routes{1}".format(self.app_name, route_path),
             {self.route_key: params}, loop=loop,
         )
@@ -133,4 +133,4 @@ class AppRoutes(object):
         result = (await self.api_client.execute(
             "/r/{0}{1}".format(self.app_name, route.path, loop=loop),
             parameters, loop=loop))
-        return result if route.type == "sync" else json.loads(result)
+        return result

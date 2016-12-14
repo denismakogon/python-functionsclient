@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     eventloop = asyncio.get_event_loop()
 
-    api_client = client.FunctionsAPIV1("192.168.0.120", api_port=8080)
+    api_client = client.FunctionsAPIV1("192.168.0.114", api_port=10501)
 
     async def create_app():
         apps = await api_client.apps.list(loop=eventloop)
@@ -31,8 +31,8 @@ if __name__ == "__main__":
         apps = await api_client.apps.list(loop=eventloop)
         print(apps)
         updated_app = await api_client.apps.show(app.name, loop=eventloop)
-        new_app = await api_client.apps.update(updated_app, loop=eventloop, **{
-            "name": "new-testapp"
+        new_app = await api_client.apps.update(updated_app.name, loop=eventloop, **{
+            "config": {"test": "hello"}
         })
         print(new_app)
         await api_client.apps.delete(new_app.name, loop=eventloop)

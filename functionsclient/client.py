@@ -227,8 +227,8 @@ class FunctionsClient(object):
         """
         with aiohttp.ClientSession(loop=loop) as session:
             response = await session.patch(
-                "{0}/{1}".format(self.api_url, url),
-                data=body,
+                "{0}{1}".format(self.api_url, url),
+                data=json.dumps(body),
                 headers=headers,
                 timeout=timeout)
             await self.raise_from_response(response)
