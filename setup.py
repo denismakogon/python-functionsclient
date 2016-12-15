@@ -23,7 +23,7 @@ setuptools.setup(
     name='python-functionsclient',
     version='0.0.3',
     description='Functions v1 Python API',
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     url='http://open.iron.io/',
     author='Denis Makogon',
     author_email='denis@iron.io',
