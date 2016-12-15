@@ -100,7 +100,7 @@ class FunctionsApps(object):
                      loop: asyncio.AbstractEventLoop=None,
                      **parameters):
         """
-        This gives more details about a app, such as statistics.
+        Updates app
 
         :param app: app name
         :type app: str
